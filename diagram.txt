@@ -1,0 +1,727 @@
+
+@startuml
+left to right direction
+package io.pivotal.pal.tracker.timesheets {
+class App {
+	+ main(String[]) : void
+	- projectClient(RestOperations, String) : ProjectClient
+}
+class TimeEntryForm {
+	+ date : String
+	+ hours : int
+	+ projectId : long
+	+ userId : long
+	+ timeEntryFormBuilder() : Builder
+}
+class Builder {
+}
+class TimeEntryInfo {
+	+ date : String
+	+ hours : int
+	+ id : long
+	+ info : String
+	+ projectId : long
+	+ userId : long
+	+ timeEntryInfoBuilder() : Builder
+}
+class Builder {
+}
+class ProjectClient {
+	- endpoint : String
+	- registrationServerEndpoint : String
+	- restOperations : RestOperations
+	+ getProject(long) : ProjectInfo
+}
+class TimeEntryController {
+	- client : ProjectClient
+	- gateway : TimeEntryDataGateway
+	+ create(TimeEntryForm) : ResponseEntity<TimeEntryInfo>
+	+ list(long) : List<TimeEntryInfo>
+	- mapToFields(TimeEntryForm) : TimeEntryFields
+	- present(TimeEntryRecord) : TimeEntryInfo
+	- projectIsActive(long) : boolean
+}
+class ProjectInfo {
+	+ accountId : long
+	+ active : boolean
+	+ id : long
+	+ info : String
+	+ name : String
+	+ equals(Object) : boolean
+	+ hashCode() : int
+	+ projectInfoBuilder() : Builder
+	+ toString() : String
+}
+}
+package test.pivotal.pal.tracker.timesheets {
+class TimesheetsAppTest {
+	+ embedded() : void
+}
+class TimeEntryDataGatewayTest {
+	- gateway : TimeEntryDataGateway
+	- template : JdbcTemplate
+	- testScenarioSupport : TestScenarioSupport
+	+ setUp() : void
+	+ testCreate() : void
+	+ testFindAllByUserId() : void
+}
+class TestBuilders {
+	+ testAllocationFieldsBuilder() : AllocationFields.Builder
+	+ testAllocationFormBuilder() : AllocationForm.Builder
+	+ testAllocationInfoBuilder() : AllocationInfo.Builder
+	+ testAllocationRecordBuilder() : AllocationRecord.Builder
+	+ testProjectFieldsBuilder() : ProjectFields.Builder
+	+ testProjectFormBuilder() : ProjectForm.Builder
+	+ testProjectInfoBuilder() : ProjectInfo.Builder
+	+ testProjectRecordBuilder() : ProjectRecord.Builder
+	+ testStoryFieldsBuilder() : StoryFields.Builder
+	+ testStoryFormBuilder() : StoryForm.Builder
+	+ testStoryInfoBuilder() : StoryInfo.Builder
+	+ testStoryRecordBuilder() : StoryRecord.Builder
+	+ testTimeEntryFieldsBuilder() : TimeEntryFields.Builder
+	+ testTimeEntryFormBuilder() : TimeEntryForm.Builder
+	+ testTimeEntryInfoBuilder() : TimeEntryInfo.Builder
+	+ testTimeEntryRecordBuilder() : TimeEntryRecord.Builder
+}
+class TimeEntryControllerTest {
+	- client : ProjectClient
+	- controller : TimeEntryController
+	- gateway : TimeEntryDataGateway
+	+ testCreate() : void
+	+ testCreate_WhenFailed() : void
+	+ testList() : void
+}
+}
+package io.pivotal.pal.tracker.registration {
+class App {
+	+ main(String[]) : void
+	- projectClient(RestOperations, String) : ProjectClient
+}
+}
+package test.pivotal.pal.tracker.registration {
+class RegistrationAppTest {
+	+ embedded() : void
+}
+}
+package io.pivotal.pal.tracker.allocations {
+class App {
+	+ main(String[]) : void
+	- projectClient(RestOperations, String) : ProjectClient
+}
+class AllocationForm {
+	+ firstDay : String
+	+ lastDay : String
+	+ projectId : long
+	+ userId : long
+	+ allocationFormBuilder() : Builder
+}
+class Builder {
+}
+class ProjectClient {
+	- endpoint : String
+	- registrationServerEndpoint : String
+	- restOperations : RestOperations
+	+ getProject(long) : ProjectInfo
+}
+class AllocationInfo {
+	+ firstDay : String
+	+ id : long
+	+ info : String
+	+ lastDay : String
+	+ projectId : long
+	+ userId : long
+	+ allocationInfoBuilder() : Builder
+}
+class Builder {
+}
+class AllocationController {
+	- client : ProjectClient
+	- gateway : AllocationDataGateway
+	+ create(AllocationForm) : ResponseEntity<AllocationInfo>
+	- formToFields(AllocationForm) : AllocationFields
+	+ list(long) : List<AllocationInfo>
+	- present(AllocationRecord) : AllocationInfo
+	- projectIsActive(long) : boolean
+}
+class ProjectInfo {
+	+ accountId : long
+	+ active : boolean
+	+ id : long
+	+ info : String
+	+ name : String
+	+ equals(Object) : boolean
+	+ hashCode() : int
+	+ projectInfoBuilder() : Builder
+	+ toString() : String
+}
+}
+package test.pivotal.pal.tracker.allocations {
+class AllocationsAppTest {
+	+ embedded() : void
+}
+class TestBuilders {
+	+ testAllocationFieldsBuilder() : AllocationFields.Builder
+	+ testAllocationFormBuilder() : AllocationForm.Builder
+	+ testAllocationInfoBuilder() : AllocationInfo.Builder
+	+ testAllocationRecordBuilder() : AllocationRecord.Builder
+	+ testProjectFieldsBuilder() : ProjectFields.Builder
+	+ testProjectFormBuilder() : ProjectForm.Builder
+	+ testProjectInfoBuilder() : ProjectInfo.Builder
+	+ testProjectRecordBuilder() : ProjectRecord.Builder
+	+ testStoryFieldsBuilder() : StoryFields.Builder
+	+ testStoryFormBuilder() : StoryForm.Builder
+	+ testStoryInfoBuilder() : StoryInfo.Builder
+	+ testStoryRecordBuilder() : StoryRecord.Builder
+	+ testTimeEntryFieldsBuilder() : TimeEntryFields.Builder
+	+ testTimeEntryFormBuilder() : TimeEntryForm.Builder
+	+ testTimeEntryInfoBuilder() : TimeEntryInfo.Builder
+	+ testTimeEntryRecordBuilder() : TimeEntryRecord.Builder
+}
+class AllocationDataGatewayTest {
+	- gateway : AllocationDataGateway
+	- template : JdbcTemplate
+	- testScenarioSupport : TestScenarioSupport
+	+ setup() : void
+	+ testCreate() : void
+	+ testFindAllByProjectId() : void
+}
+class AllocationControllerTest {
+	- allocationDataGateway : AllocationDataGateway
+	- allocationsController : AllocationController
+	- client : ProjectClient
+	+ testCreate() : void
+	+ testCreate_WhenProjectIsNotActive() : void
+	+ testList() : void
+}
+}
+package io.pivotal.pal.tracker.backlog {
+class App {
+	+ main(String[]) : void
+	- projectClient(RestOperations, String) : ProjectClient
+}
+class ProjectClient {
+	- endpoint : String
+	- registrationServerEndpoint : String
+	- restOperations : RestOperations
+	+ getProject(long) : ProjectInfo
+}
+class StoryController {
+	- client : ProjectClient
+	- gateway : StoryDataGateway
+	+ create(StoryForm) : ResponseEntity<StoryInfo>
+	+ list(long) : List<StoryInfo>
+	- mapToFields(StoryForm) : StoryFields
+	- present(StoryRecord) : StoryInfo
+	- projectIsActive(long) : boolean
+}
+class StoryInfo {
+	+ id : long
+	+ info : String
+	+ name : String
+	+ projectId : long
+	+ storyInfoBuilder() : Builder
+}
+class Builder {
+}
+class StoryForm {
+	+ name : String
+	+ projectId : long
+	+ storyFormBuilder() : Builder
+}
+class Builder {
+}
+class ProjectInfo {
+	+ accountId : long
+	+ active : boolean
+	+ id : long
+	+ info : String
+	+ name : String
+	+ equals(Object) : boolean
+	+ hashCode() : int
+	+ projectInfoBuilder() : Builder
+	+ toString() : String
+}
+}
+package test.pivotal.pal.tracker.backlog {
+class BacklogAppTest {
+	+ embedded() : void
+}
+class TestBuilders {
+	+ testAllocationFieldsBuilder() : AllocationFields.Builder
+	+ testAllocationFormBuilder() : AllocationForm.Builder
+	+ testAllocationInfoBuilder() : AllocationInfo.Builder
+	+ testAllocationRecordBuilder() : AllocationRecord.Builder
+	+ testProjectFieldsBuilder() : ProjectFields.Builder
+	+ testProjectFormBuilder() : ProjectForm.Builder
+	+ testProjectInfoBuilder() : ProjectInfo.Builder
+	+ testProjectRecordBuilder() : ProjectRecord.Builder
+	+ testStoryFieldsBuilder() : StoryFields.Builder
+	+ testStoryFormBuilder() : StoryForm.Builder
+	+ testStoryInfoBuilder() : StoryInfo.Builder
+	+ testStoryRecordBuilder() : StoryRecord.Builder
+	+ testTimeEntryFieldsBuilder() : TimeEntryFields.Builder
+	+ testTimeEntryFormBuilder() : TimeEntryForm.Builder
+	+ testTimeEntryInfoBuilder() : TimeEntryInfo.Builder
+	+ testTimeEntryRecordBuilder() : TimeEntryRecord.Builder
+}
+class StoryControllerTest {
+	- client : ProjectClient
+	- storyController : StoryController
+	- storyDataGateway : StoryDataGateway
+	+ testCreate() : void
+	+ testFailedCreate() : void
+	+ testList() : void
+}
+}
+package io.pivotal.pal.tracker.projects {
+class ProjectForm {
+	+ accountId : long
+	+ active : boolean
+	+ name : String
+	+ projectFormBuilder() : Builder
+}
+class Builder {
+}
+class ProjectController {
+	- gateway : ProjectDataGateway
+	+ create(ProjectForm) : ResponseEntity<ProjectInfo>
+	- formToFields(ProjectForm) : ProjectFields
+	+ get(long) : ProjectInfo
+	+ list(long) : List<ProjectInfo>
+	- present(ProjectRecord) : ProjectInfo
+}
+class ProjectInfo {
+	+ accountId : long
+	+ active : boolean
+	+ id : long
+	+ info : String
+	+ name : String
+	+ equals(Object) : boolean
+	+ hashCode() : int
+	+ projectInfoBuilder() : Builder
+	+ toString() : String
+}
+class Builder {
+}
+}
+package io.pivotal.pal.tracker.projects.data {
+class ProjectDataGateway {
+	- jdbcTemplate : JdbcTemplate
+	- rowMapper : RowMapper<ProjectRecord>
+	+ create(ProjectFields) : ProjectRecord
+	+ findAllByAccountId(Long) : List<ProjectRecord>
+	+ find(long) : ProjectRecord
+}
+class ProjectFields {
+	+ accountId : long
+	+ active : boolean
+	+ name : String
+	+ projectFieldsBuilder() : Builder
+}
+class Builder {
+}
+class ProjectRecord {
+	+ accountId : long
+	+ active : boolean
+	+ id : long
+	+ name : String
+	+ projectRecordBuilder() : Builder
+}
+class Builder {
+}
+}
+package test.pivotal.pal.tracker.projects {
+class ProjectDataGatewayTest {
+	- gateway : ProjectDataGateway
+	- template : JdbcTemplate
+	- testScenarioSupport : TestScenarioSupport
+	+ setUp() : void
+	+ testCreate() : void
+	+ testFind() : void
+	+ testFindAllByAccountId() : void
+}
+class ProjectControllerTest {
+	- controller : ProjectController
+	- gateway : ProjectDataGateway
+	+ testCreate() : void
+	+ testGet() : void
+	+ testGet_WithNull() : void
+	+ testList() : void
+}
+class TestBuilders {
+	+ testAllocationFieldsBuilder() : AllocationFields.Builder
+	+ testAllocationFormBuilder() : AllocationForm.Builder
+	+ testAllocationInfoBuilder() : AllocationInfo.Builder
+	+ testAllocationRecordBuilder() : AllocationRecord.Builder
+	+ testProjectFieldsBuilder() : ProjectFields.Builder
+	+ testProjectFormBuilder() : ProjectForm.Builder
+	+ testProjectInfoBuilder() : ProjectInfo.Builder
+	+ testProjectRecordBuilder() : ProjectRecord.Builder
+	+ testStoryFieldsBuilder() : StoryFields.Builder
+	+ testStoryFormBuilder() : StoryForm.Builder
+	+ testStoryInfoBuilder() : StoryInfo.Builder
+	+ testStoryRecordBuilder() : StoryRecord.Builder
+	+ testTimeEntryFieldsBuilder() : TimeEntryFields.Builder
+	+ testTimeEntryFormBuilder() : TimeEntryForm.Builder
+	+ testTimeEntryInfoBuilder() : TimeEntryInfo.Builder
+	+ testTimeEntryRecordBuilder() : TimeEntryRecord.Builder
+}
+}
+package io.pivotal.pal.tracker.allocations.data {
+class AllocationRecord {
+	+ firstDay : LocalDate
+	+ id : long
+	+ lastDay : LocalDate
+	+ projectId : long
+	+ userId : long
+	+ allocationRecordBuilder() : Builder
+}
+class Builder {
+}
+class AllocationDataGateway {
+	- jdbcTemplate : JdbcTemplate
+	- rowMapper : RowMapper<AllocationRecord>
+	+ create(AllocationFields) : AllocationRecord
+	+ findAllByProjectId(Long) : List<AllocationRecord>
+	- find(long) : AllocationRecord
+}
+class AllocationFields {
+	+ firstDay : LocalDate
+	+ lastDay : LocalDate
+	+ projectId : long
+	+ userId : long
+	+ allocationFieldsBuilder() : Builder
+}
+class Builder {
+}
+}
+package io.pivotal.pal.tracker.restsupport {
+class SpringDefaultController {
+	+ defaultRoute() : String
+}
+class RestConfig {
+	+ objectMapper() : ObjectMapper
+	+ restOperations() : RestOperations
+}
+}
+package io.pivotal.pal.tracker.backlog.data {
+class StoryRecord {
+	+ id : long
+	+ name : String
+	+ projectId : long
+	+ storyRecordBuilder() : Builder
+}
+class Builder {
+}
+class StoryFields {
+	+ name : String
+	+ projectId : long
+	+ storyFieldsBuilder() : Builder
+}
+class Builder {
+}
+class StoryDataGateway {
+	- jdbcTemplate : JdbcTemplate
+	- rowMapper : RowMapper<StoryRecord>
+	+ create(StoryFields) : StoryRecord
+	+ findAllByProjectId(Long) : List<StoryRecord>
+	- find(long) : StoryRecord
+}
+}
+package test.pivotal.pal.tracker.backlog.data {
+class StoryDataGatewayTest {
+	- gateway : StoryDataGateway
+	- template : JdbcTemplate
+	- testScenarioSupport : TestScenarioSupport
+	+ setUp() : void
+	+ testCreate() : void
+	+ testFindBy() : void
+}
+}
+package io.pivotal.pal.tracker.users {
+class UserController {
+	- gateway : UserDataGateway
+	+ show(long) : UserInfo
+}
+class UserInfo {
+	+ id : long
+	+ info : String
+	+ name : String
+	+ equals(Object) : boolean
+	+ hashCode() : int
+	+ toString() : String
+}
+}
+package io.pivotal.pal.tracker.users.data {
+class UserDataGateway {
+	- jdbcTemplate : JdbcTemplate
+	- rowMapper : RowMapper<UserRecord>
+	+ create(String) : UserRecord
+	+ find(long) : UserRecord
+}
+class UserRecord {
+	+ id : long
+	+ name : String
+	+ equals(Object) : boolean
+	+ hashCode() : int
+	+ toString() : String
+}
+}
+package test.pivotal.pal.tracker.users.data {
+class UserDataGatewayTest {
+	- gateway : UserDataGateway
+	- template : JdbcTemplate
+	- testScenarioSupport : TestScenarioSupport
+	+ setUp() : void
+	+ testCreate() : void
+	+ testFind() : void
+	+ testFind_WhenNotFound() : void
+}
+}
+package test.pivotal.pal.tracker.users {
+class UserControllerTest {
+	- controller : UserController
+	- gateway : UserDataGateway
+	+ testShow() : void
+}
+}
+package io.pivotal.pal.tracker.accounts {
+class RegistrationForm {
+	+ name : String
+	+ equals(Object) : boolean
+	+ hashCode() : int
+	+ toString() : String
+}
+class AccountInfo {
+	+ id : long
+	+ info : String
+	+ name : String
+	+ ownerId : long
+	+ accountInfoBuilder() : Builder
+}
+class Builder {
+}
+class RegistrationService {
+	- accountDataGateway : AccountDataGateway
+	- userDataGateway : UserDataGateway
+	+ createUserWithAccount(String) : UserRecord
+}
+class RegistrationController {
+	- service : RegistrationService
+	+ create(RegistrationForm) : UserInfo
+}
+class AccountController {
+	- gateway : AccountDataGateway
+	+ list(long) : List<AccountInfo>
+	- present(AccountRecord) : AccountInfo
+}
+}
+package io.pivotal.pal.tracker.accounts.data {
+class AccountDataGateway {
+	- jdbcTemplate : JdbcTemplate
+	- rowMapper : RowMapper<AccountRecord>
+	+ create(long, String) : AccountRecord
+	+ findAllByOwnerId(long) : List<AccountRecord>
+}
+class AccountRecord {
+	+ id : long
+	+ name : String
+	+ ownerId : long
+	+ accountRecordBuilder() : Builder
+}
+class Builder {
+}
+}
+package test.pivotal.pal.tracker.accounts {
+class RegistrationControllerTest {
+	- registrationController : RegistrationController
+	- registrationService : RegistrationService
+	+ create() : void
+}
+class AccountControllerTest {
+	- controller : AccountController
+	- gateway : AccountDataGateway
+	+ testList() : void
+}
+class RegistrationServiceTest {
+	- accountDataGateway : AccountDataGateway
+	- service : RegistrationService
+	- userDataGateway : UserDataGateway
+	+ testCreateUserWithAccount() : void
+}
+}
+package test.pivotal.pal.tracker.accounts.data {
+class AccountDataGatewayTest {
+	- gateway : AccountDataGateway
+	- template : JdbcTemplate
+	- testScenarioSupport : TestScenarioSupport
+	+ setup() : void
+	+ testCreate() : void
+	+ testFindBy() : void
+}
+}
+package io.pivotal.pal.tracker.testsupport {
+class TestScenarioSupport {
+	+ dataSource : DataSource
+	+ template : JdbcTemplate
+	+ clearAllDatabases() : void
+	- clearTables(String, String) : void
+}
+class TestDataSourceFactory {
+	+ create(String) : DataSource
+}
+}
+package io.pivotal.pal.tracker.timesheets.data {
+class TimeEntryDataGateway {
+	- jdbcTemplate : JdbcTemplate
+	- rowMapper : RowMapper<TimeEntryRecord>
+	+ create(TimeEntryFields) : TimeEntryRecord
+	+ findAllByUserId(long) : List<TimeEntryRecord>
+	- find(long) : TimeEntryRecord
+}
+class TimeEntryRecord {
+	+ date : LocalDate
+	+ hours : int
+	+ id : long
+	+ projectId : long
+	+ userId : long
+	+ timeEntryRecordBuilder() : Builder
+}
+class Builder {
+}
+class TimeEntryFields {
+	+ date : LocalDate
+	+ hours : int
+	+ projectId : long
+	+ userId : long
+	+ timeEntryFieldsBuilder() : Builder
+}
+class Builder {
+}
+}
+package test.pivotal.pal.tracker {
+class FlowTest {
+	- allocationsServer : ApplicationServer
+	- backlogServer : ApplicationServer
+	- httpClient : HttpClient
+	- registrationServer : ApplicationServer
+	- timesheetsServer : ApplicationServer
+	- workingDir : String
+	- allocationsServerUrl(String) : String
+	- backlogServerUrl(String) : String
+	- findResponseId(HttpClient.Response) : long
+	- registrationServerUrl(String) : String
+	+ setup() : void
+	+ tearDown() : void
+	+ testBasicFlow() : void
+	- timesheetsServerUrl(String) : String
+}
+}
+package test.pivotal.pal.tracker.support {
+class HttpClient {
+	- JSON : MediaType
+	- objectMapper : ObjectMapper
+	- okHttp : OkHttpClient
+	+ delete(String) : Response
+	- fetch(Request.Builder) : Response
+	+ get(String) : Response
+	+ post(String, Map<String,Object>) : Response
+	+ put(String, Map<String,Object>) : Response
+}
+class Response {
+}
+class ApplicationServer {
+	- jarPath : String
+	- port : String
+	- serverProcess : Process
+	+ startWithDatabaseName(String) : void
+	+ start(Map<String,String>) : void
+	+ stop() : void
+	+ waitOnPorts(String) : void
+	- waitUntilServerIsUp(String) : void
+}
+class MapBuilder<K, V> {
+	- map : Map<K,V>
+	+ build() : Map<K,V>
+	+ envMapBuilder() : MapBuilder<String,String>
+	+ jsonMapBuilder() : MapBuilder<String,Object>
+	+ put(K, V) : MapBuilder<K,V>
+}
+}
+JdbcTemplate "1" <-- ProjectDataGateway
+HttpClient --> "1" MediaType
+UserControllerTest --> "1" UserDataGateway
+TestScenarioSupport "1" <-- UserDataGatewayTest
+AllocationControllerTest --> "1" AllocationDataGateway
+LocalDate "1" <-- TimeEntryFields
+JdbcTemplate "1" <-- UserDataGateway
+UserDataGateway "1" <-- UserDataGatewayTest
+StoryDataGatewayTest --> "1" TestScenarioSupport
+JdbcTemplate "1" <-- TimeEntryDataGateway
+AllocationDataGatewayTest --> "1" TestScenarioSupport
+HttpClient --> "1" OkHttpClient
+AllocationDataGateway --> "1" RowMapper
+AllocationController "1" <-- AllocationControllerTest
+ProjectControllerTest --> "1" ProjectDataGateway
+JdbcTemplate "1" <-- TimeEntryDataGatewayTest
+ProjectClient --> "1" RestOperations
+JdbcTemplate "1" <-- StoryDataGatewayTest
+HttpClient --> "1" ObjectMapper
+AllocationDataGateway "1" <-- AllocationDataGatewayTest
+StoryDataGateway "1" <-- StoryDataGatewayTest
+RegistrationController "1" <-- RegistrationControllerTest
+LocalDate "1" <-- TimeEntryRecord
+AccountController --> "1" AccountDataGateway
+AllocationDataGateway --> "1" JdbcTemplate
+RegistrationService "1" <-- RegistrationServiceTest
+AllocationFields --> "1" LocalDate
+AccountDataGateway --> "1" JdbcTemplate
+RegistrationService --> "1" UserDataGateway
+AllocationController --> "1" ProjectClient
+ProjectClient "1" <-- TimeEntryControllerTest
+JdbcTemplate "1" <-- ProjectDataGatewayTest
+ApplicationServer "1" <-- FlowTest
+RowMapper "1" <-- TimeEntryDataGateway
+ProjectController --> "1" ProjectDataGateway
+JdbcTemplate "1" <-- UserDataGatewayTest
+AccountDataGatewayTest --> "1" JdbcTemplate
+ProjectController "1" <-- ProjectControllerTest
+ProjectDataGateway --> "1" RowMapper
+DataSource "1" <-- TestScenarioSupport
+FlowTest --> "1" HttpClient
+ProjectClient "1" <-- TimeEntryController
+RegistrationServiceTest --> "1" UserDataGateway
+StoryController --> "1" StoryDataGateway
+JdbcTemplate "1" <-- TestScenarioSupport
+TimeEntryController "1" <-- TimeEntryControllerTest
+AllocationDataGatewayTest --> "1" JdbcTemplate
+AccountDataGateway "1" <-- RegistrationServiceTest
+UserController --> "1" UserDataGateway
+AccountDataGateway --> "1" RowMapper
+RowMapper "1" <-- StoryDataGateway
+RowMapper "1" <-- UserDataGateway
+ProjectClient "1" <-- StoryControllerTest
+AccountDataGatewayTest --> "1" TestScenarioSupport
+RegistrationControllerTest --> "1" RegistrationService
+AllocationRecord --> "1" LocalDate
+TimeEntryDataGateway "1" <-- TimeEntryDataGatewayTest
+AccountDataGateway "1" <-- RegistrationService
+ProjectDataGatewayTest --> "1" TestScenarioSupport
+UserController "1" <-- UserControllerTest
+JdbcTemplate "1" <-- StoryDataGateway
+MapBuilder --> "*" V
+TestScenarioSupport "1" <-- TimeEntryDataGatewayTest
+TimeEntryController --> "1" TimeEntryDataGateway
+AccountControllerTest --> "1" AccountDataGateway
+AccountDataGateway "1" <-- AccountDataGatewayTest
+AllocationControllerTest --> "1" ProjectClient
+StoryControllerTest --> "1" StoryDataGateway
+ApplicationServer --> "1" Process
+StoryController "1" <-- StoryControllerTest
+RegistrationController --> "1" RegistrationService
+ProjectClient "1" <-- StoryController
+AccountController "1" <-- AccountControllerTest
+ProjectDataGateway "1" <-- ProjectDataGatewayTest
+TimeEntryControllerTest --> "1" TimeEntryDataGateway
+AllocationController --> "1" AllocationDataGateway
+@enduml

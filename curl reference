@@ -32,16 +32,16 @@ curl -i localhost:8084/time-entries?userId=${USER_ID}
 
 Routes
 
-timesheets-pal-pikachu.apps.chicken.pal.pivotal.io
-backlog-pal-pikachu.apps.chicken.pal.pivotal.io
+timesheets-pal-pikachu.apps.evans.pal.pivotal.io
+backlog-pal-pikachu.apps.evans.pal.pivotal.io
 registration-pal-pikachu.apps.evans.pal.pivotal.io
-allocations-pal-pikachu.apps.chicken.pal.pivotal.io
+allocations-pal-pikachu.apps.evans.pal.pivotal.io
 
 ./gradlew cloudNativeDeveloperDistributedSystemDeployment \
     -PregistrationServerUrl=https://registration-pal-pikachu.apps.evans.pal.pivotal.io \
-    -PbacklogServerUrl=https://backlog-pal-pikachu.apps.chicken.pal.pivotal.io \
-    -PallocationsServerUrl=https://allocations-pal-pikachu.apps.chicken.pal.pivotal.io \
-    -PtimesheetsServerUrl=https://timesheets-pal-pikachu.apps.chicken.pal.pivotal.io
+    -PbacklogServerUrl=https://backlog-pal-pikachu.apps.evans.pal.pivotal.io \
+    -PallocationsServerUrl=https://allocations-pal-pikachu.apps.evans.pal.pivotal.io \
+    -PtimesheetsServerUrl=https://timesheets-pal-pikachu.apps.evans.pal.pivotal.io
 
 
 

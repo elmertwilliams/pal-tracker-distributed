@@ -33,4 +33,9 @@ public class App {
     ) {
         return new ProjectClient(restOperations, registrationEndpoint);
     }
+
+    @Bean
+    String configServerProvidedValue(){
+        return "NOT_SET";
+    }
 }
